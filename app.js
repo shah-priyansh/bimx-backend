@@ -143,7 +143,7 @@ app.post("/process-drawings", async (req, res) => {
 });
 app.post("/upload-file-to-forge", async (req, res) => {
   console.log(req.body.record);
-  const fileName = req.body.record.file;
+  // const fileName = req.body.record.file;
   if (
     req.body.type === "UPDATE" &&
     req.body.record.file === req.body.old_record.file
@@ -154,7 +154,7 @@ app.post("/upload-file-to-forge", async (req, res) => {
   const supabase = SupabaseCli.createClient(SUPABASE_URL, SUPABASE_TOKEN);
   const { data, error } = await supabase.storage
     .from("project-documents")
-    .download(fileName);
+    .download('project_1703655415911.obj');
   console.log("FILE DOWNLOADED");
   let oAuth2TwoLegged = new APS.AuthClientTwoLegged(
     FORGE_CLIENT_ID[3],
@@ -170,7 +170,7 @@ app.post("/upload-file-to-forge", async (req, res) => {
   var asd = await new APS.ObjectsApi()
     .uploadObject(
       FORGE_CLIENT_ID[3].toLowerCase() + "-basic-app",
-      fileName,
+      'project_1703655415911.obj',
       size,
       buffer,
       {},
@@ -198,7 +198,7 @@ app.post("/upload-file-to-forge", async (req, res) => {
   const { error1 } = await supabase
     .from("Drawings_v2_source")
     .update({ config: urn, creds: 3 })
-    .eq("id", req.body.record.id);
+    .eq("id", 1142);
   console.log("TRANSLATION COMPLETED", resp);
   // return resp.body;
   res.send(resp.body);
@@ -278,7 +278,7 @@ app.post("/getProjectDetails/:id", async (req, res) => {
     return;
   }
   var { data, error1 } = await supabase
-    .from("Drawings")
+    .from("Drawings_v2_source")
     .select()
     .eq("project_id", project.id);
   res.send({
@@ -312,17 +312,17 @@ app.post("/url-shortener", async (req, res) => {
     .select()
     .eq("id", req.body.record.organization_id);
   var newURL = "";
-  if (table === "Drawings_v2_source") {
+  if (table == "Drawings_v2_source") {
     newURL = data[0].domain + uniqueCOde ?? req.body.record.code;
   } else {
     newURL = data[0].domain + "p/" + uniqueCOde ?? req.body.record.code;
   }
   updateObject.url = newURL;
   console.log("UPDATE OBJECT", updateObject);
-  if (updateObject.url === req.body.record.url) {
-    res.send({ success: true });
-    return;
-  }
+  // if (updateObject.url === req.body.record.url) {
+  //   res.send({ success: true });
+  //   return;
+  // }
   var { error1 } = supabase
     .from(req.body.table)
     .update(updateObject)
@@ -478,7 +478,7 @@ app.post("/startImport", async (req, res) => {
           }
 
           let { data: drawing, error: drawingError } = await supabase
-            .from("Drawings")
+            .from("Drawings_v2_source")
             .insert([
               {
                 name: foundValue[0].name,
@@ -531,7 +531,7 @@ app.post("/startImport", async (req, res) => {
             });
           }
           await supabase
-            .from("Drawings")
+            .from("Drawings_v2_source")
             .update({ current_version: version.id })
             .eq("id", drawing.id);
         }
