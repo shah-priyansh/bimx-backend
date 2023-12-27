@@ -143,7 +143,7 @@ app.post("/process-drawings", async (req, res) => {
 });
 app.post("/upload-file-to-forge", async (req, res) => {
   console.log(req.body.record);
-  // const fileName = req.body.record.file;
+  const fileName = req.body.record.file;
   if (
     req.body.type === "UPDATE" &&
     req.body.record.file === req.body.old_record.file
@@ -154,7 +154,7 @@ app.post("/upload-file-to-forge", async (req, res) => {
   const supabase = SupabaseCli.createClient(SUPABASE_URL, SUPABASE_TOKEN);
   const { data, error } = await supabase.storage
     .from("project-documents")
-    .download('project_1703655415911.obj');
+    .download(fileName);
   console.log("FILE DOWNLOADED");
   let oAuth2TwoLegged = new APS.AuthClientTwoLegged(
     FORGE_CLIENT_ID[3],
@@ -170,7 +170,7 @@ app.post("/upload-file-to-forge", async (req, res) => {
   var asd = await new APS.ObjectsApi()
     .uploadObject(
       FORGE_CLIENT_ID[3].toLowerCase() + "-basic-app",
-      'project_1703655415911.obj',
+      fileName,
       size,
       buffer,
       {},
@@ -198,7 +198,7 @@ app.post("/upload-file-to-forge", async (req, res) => {
   const { error1 } = await supabase
     .from("Drawings_v2_source")
     .update({ config: urn, creds: 3 })
-    .eq("id", 1142);
+    .eq("id", req.body.record.id);
   console.log("TRANSLATION COMPLETED", resp);
   // return resp.body;
   res.send(resp.body);
