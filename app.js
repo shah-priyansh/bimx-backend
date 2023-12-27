@@ -305,7 +305,7 @@ app.post("/url-shortener", async (req, res) => {
     res.send({ success: true });
     return;
   }
-  console.log("HELLO");
+  console.log("HELLO",req.body);
   const supabase = SupabaseCli.createClient(SUPABASE_URL, SUPABASE_TOKEN);
   var { data, error } = await supabase
     .from("Organization")
