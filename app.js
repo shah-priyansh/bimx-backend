@@ -319,10 +319,10 @@ app.post("/url-shortener", async (req, res) => {
   }
   updateObject.url = newURL;
   console.log("UPDATE OBJECT", updateObject);
-  // if (updateObject.url === req.body.record.url) {
-  //   res.send({ success: true });
-  //   return;
-  // }
+  if (updateObject.url === req.body.record.url) {
+    res.send({ success: true });
+    return;
+  }
   var { error1 } = supabase
     .from(req.body.table)
     .update(updateObject)
