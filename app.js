@@ -217,7 +217,7 @@ app.post("/getDrawingDetails/:id", async (req, res) => {
     return;
   }
   if (
-    ((data[0].Projects.pin && data[0].Projects.pin !== req.body.pin) ||
+    ((data[0]?.Projects?.pin && data[0].Projects.pin !== req.body.pin) &&
       data[0].pin !== req.body.pin) &&
     data[0].pin !== null
   ) {
@@ -270,8 +270,7 @@ app.post("/getProjectDetails/:id", async (req, res) => {
     return;
   }
   project = data[0];
-  console.log(!(project.pin == req.body.pin || project.pin === null));
-  if (!(project.pin == req.body.pin || project.pin === null)) {
+  if (!(project?.pin == req.body.pin || project?.pin === null)) {
     res.send({
       message: "PIN is wrong!",
     });
